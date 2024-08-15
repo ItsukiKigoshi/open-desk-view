@@ -1,4 +1,5 @@
 # https://pyimagesearch.com/2014/08/25/4-point-opencv-getperspective-transform-example/
+# Usage: "% python src/transform_example.py --image public/sample-desktop-1.jpg --coords "[(275, 329), (785,321), (914,584), (141,592)]"           "
 
 # import the necessary packages
 
