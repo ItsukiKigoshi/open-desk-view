@@ -63,6 +63,25 @@ def onMouse(event, x, y, corners):
         print(x, y)
         corners.add([x,y])
 
+
+
+a = []
+
+def click_event(event, x, y, flags, params): 
+    # checking for left mouse clicks 
+    if event == cv2.EVENT_LBUTTONDOWN:
+            a.append([x, y])
+            print(a)
+            # displaying the coordinates 
+            # on the image window 
+            font = cv2.FONT_HERSHEY_SIMPLEX 
+            cv2.putText(img, str(x) + ',' +
+                        str(y), (x,y), font, 
+                        1, (255, 0, 0), 2) 
+            cv2.circle(img, (x,y), 6, (0, 0, 255), 2) 
+            cv2.imshow('image', img)
+            
+
 # driver function 
 if __name__=="__main__": 
   
@@ -72,40 +91,45 @@ if __name__=="__main__":
     # 射影変換
     # M = cv2.getPerspectiveTransform(p_original, p_trans)
     M = cv2.getPerspectiveTransform(rect, dst)
-    frame_trans = cv2.warpPerspective(frame, M, (width, height))
+    img = cv2.warpPerspective(frame, M, (width, height))
   
     # displaying the image 
-    cv2.imshow('変換後の映像', frame_trans)
-  
+    cv2.imshow('変換後の映像', img)
 
     corners = []
-    cv2.setMouseCallback('image',onMouse(corners)) 
+    cv2.setMouseCallback('image',click_event) 
 
-    while True:
-        if(len(corners)==4):
-            break
+    # wait for a key to be pressed to exit 
+    cv2.waitKey(0) 
+
+	# close the window 
+    cv2.destroyAllWindows() 
+
+    # while True:
+    #     if(len(corners)==4):
+    #         break
   
-    while True:
-        # カメラからのフレーム取得
-        ret, frame = capture.read()
-        if not ret:
-            break
+    # while True:
+    #     # カメラからのフレーム取得
+    #     ret, frame = capture.read()
+    #     if not ret:
+    #         break
 
-        # 射影変換
-        # M = cv2.getPerspectiveTransform(p_original, p_trans)
-        M = cv2.getPerspectiveTransform(rect, dst)
-        frame_trans = cv2.warpPerspective(frame, M, (width, height))
+    #     # 射影変換
+    #     # M = cv2.getPerspectiveTransform(p_original, p_trans)
+    #     M = cv2.getPerspectiveTransform(rect, dst)
+    #     frame_trans = cv2.warpPerspective(frame, M, (width, height))
         
 
 
-        # 表示
-        cv2.imshow('変換後の映像', frame_trans)
-        cv2.setMouseCallback('image',onMouse) 
+    #     # 表示
+    #     cv2.imshow('変換後の映像', frame_trans)
+    #     cv2.setMouseCallback('image',onMouse) 
 
-        # cv2.imshow('変換前の映像', frame)
+    #     # cv2.imshow('変換前の映像', frame)
 
-        if cv2.waitKey(1) & 0xFF == ord('q'):
-            break
+    #     if cv2.waitKey(1) & 0xFF == ord('q'):
+    #         break
 
 
 # while True:
