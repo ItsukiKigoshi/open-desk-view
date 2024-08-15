@@ -49,6 +49,42 @@ def getPointsList(img):
 
 
 
+class mouse_event_handler_image:
+    def __init__(self):
+        self.points = []
+
+    def mouse_event(self, event, x, y, flags, param, img):
+        if event == cv2.EVENT_LBUTTONUP:
+            self.points += [(x,y)]
+            print(x,y)
+            cv2.circle(img, (x,y), 6, (0, 0, 255), 2) 
+            cv2.imshow('img', img)
+
+
+def getPointsListFromOneImage(img):
+
+    m = mouse_event_handler_image()
+
+    cv2.imshow('img',img)
+    cv2.namedWindow("img", cv2.WINDOW_NORMAL)
+    cv2.setMouseCallback ("img", \
+                          lambda event, x, y, flags, param: \
+                          m.mouse_event(event, x, y, flags, param, img))
+
+    while True:
+
+        if cv2.waitKey(1) & 0xFF == ord("q"):
+            break
+        if len(m.points) >= 4:
+            break
+
+    cv2.destroyAllWindows()
+    return m.points
+
+
+
+
+
 
 # カメラからフレームを1枚取得
 ret, frame = capture.read()
@@ -64,50 +100,13 @@ pts = np.array(a)
 
 
 #ここから動画の表示
+
+
 # フレームのサイズを取得
 height, width, channels = frame.shape
 
 
-# def order_points(pts):
-# 	rect = np.zeros((4, 2), dtype = "float32")
-# 	s = pts.sum(axis = 1)
-# 	rect[0] = pts[np.argmin(s)]
-# 	rect[2] = pts[np.argmax(s)]
-# 	diff = np.diff(pts, axis = 1)
-# 	rect[1] = pts[np.argmin(diff)]
-# 	rect[3] = pts[np.argmax(diff)]
-# 	# return the ordered coordinates
-# 	return rect
-
-
-
-def order_points_new(pts):
-    rect = np.zeros((4, 2), dtype = "float32")
-    # x の値でソート
-    sorted_indices = np.argsort(pts[:, 0])
-    sorted_data = pts[sorted_indices]
-
-    # リストを前後2つに分割
-    first_half = sorted_data[:2]
-    second_half = sorted_data[2:]
-
-    # y の値でソート
-    first_half_sorted = first_half[np.argsort(first_half[:, 1])]
-    second_half_sorted = second_half[np.argsort(second_half[:, 1])]
-
-    rect[0] = first_half_sorted[0]
-    rect[3] = first_half_sorted[1]
-
-    rect[1] = second_half_sorted[0]
-    rect[2] = second_half_sorted[1]
-
-    return rect
-
-
-
-
-print("pts:",pts)
-rect = order_points_new(pts)
+rect = order_points(pts)
 (tl, tr, br, bl) = rect
 print("rect:",rect)
 widthA = np.sqrt(((br[0] - bl[0]) ** 2) + ((br[1] - bl[1]) ** 2))
@@ -120,7 +119,7 @@ maxHeight = max(int(heightA), int(heightB))
 
 dst = np.array([
 		[0, 0],
-		[848 - 1, 0],
+		[848, 0],
 		[848 - 1, 592 - 1],
 		[0, 592 - 1]], dtype = "float32")
 
