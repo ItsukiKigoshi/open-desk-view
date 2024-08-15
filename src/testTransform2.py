@@ -4,87 +4,9 @@
 import numpy as np
 import cv2
 from transform import order_points
+from getPointsList import getPointsList, getPointsListFromOneImage
 
 capture = cv2.VideoCapture(0)
-
-class mouse_event_handler:
-    def __init__(self):
-        self.points = []
-
-    def mouse_event(self, event, x, y, flags, param, img):
-        if event == cv2.EVENT_LBUTTONUP:
-            self.points += [(x,y)]
-            print(x,y)
-
-
-def getPointsList(img):
-
-    m = mouse_event_handler()
-
-    cv2.imshow('img',img)
-    cv2.namedWindow("img", cv2.WINDOW_NORMAL)
-    cv2.setMouseCallback ("img", \
-                          lambda event, x, y, flags, param: \
-                          m.mouse_event(event, x, y, flags, param, img))
-
-    while True:
-        # カメラからのフレーム取得
-        ret, frame = capture.read()
-        if not ret:
-            continue
-
-        # 表示
-        cv2.imshow('img', frame)
-
-        
-
-        if cv2.waitKey(1) & 0xFF == ord("q"):
-            break
-        if len(m.points) >= 4:
-            break
-
-    cv2.destroyAllWindows()
-    return m.points
-
-
-
-
-class mouse_event_handler_image:
-    def __init__(self):
-        self.points = []
-
-    def mouse_event(self, event, x, y, flags, param, img):
-        if event == cv2.EVENT_LBUTTONUP:
-            self.points += [(x,y)]
-            print(x,y)
-            cv2.circle(img, (x,y), 6, (0, 0, 255), 2) 
-            cv2.imshow('img', img)
-
-
-def getPointsListFromOneImage(img):
-
-    m = mouse_event_handler_image()
-
-    cv2.imshow('img',img)
-    cv2.namedWindow("img", cv2.WINDOW_NORMAL)
-    cv2.setMouseCallback ("img", \
-                          lambda event, x, y, flags, param: \
-                          m.mouse_event(event, x, y, flags, param, img))
-
-    while True:
-
-        if cv2.waitKey(1) & 0xFF == ord("q"):
-            break
-        if len(m.points) >= 4:
-            break
-
-    cv2.destroyAllWindows()
-    return m.points
-
-
-
-
-
 
 # カメラからフレームを1枚取得
 ret, frame = capture.read()
@@ -94,6 +16,7 @@ if not ret:
     cv2.destroyAllWindows()
     exit()
 
+# 4点を取得
 a = getPointsList(frame)
 print("a:",a)
 pts = np.array(a)
