@@ -68,9 +68,10 @@ while True:
     # M = cv2.getPerspectiveTransform(p_original, p_trans)
     M = cv2.getPerspectiveTransform(rect, dst)
     frame_trans = cv2.warpPerspective(frame, M,  (842, 595))
+    frame_flip = cv2.flip(frame_trans, -1)
 
     # 表示
-    cv2.imshow('Transformed Frame', frame_trans)
+    cv2.imshow('Transformed Frame', frame_flip)
 
     if cv2.waitKey(1) & 0xFF == ord('q'):
         break
