@@ -58,24 +58,74 @@ dst = np.array([
 		[maxWidth*3/4 , maxHeight*3/4 ],
 		[maxWidth/4, maxHeight*3/4 ]], dtype = "float32")
 
-while True:
-    # カメラからのフレーム取得
+def onMouse(event, x, y, corners):
+    if event == cv2.EVENT_LBUTTONDOWN:
+        print(x, y)
+        corners.add([x,y])
+
+# driver function 
+if __name__=="__main__": 
+  
+    # reading the image 
     ret, frame = capture.read()
-    if not ret:
-        break
 
     # 射影変換
     # M = cv2.getPerspectiveTransform(p_original, p_trans)
     M = cv2.getPerspectiveTransform(rect, dst)
     frame_trans = cv2.warpPerspective(frame, M, (width, height))
-
-
-    # 表示
+  
+    # displaying the image 
     cv2.imshow('変換後の映像', frame_trans)
-    # cv2.imshow('変換前の映像', frame)
+  
 
-    if cv2.waitKey(1) & 0xFF == ord('q'):
-        break
+    corners = []
+    cv2.setMouseCallback('image',onMouse(corners)) 
+
+    while True:
+        if(len(corners)==4):
+            break
+  
+    while True:
+        # カメラからのフレーム取得
+        ret, frame = capture.read()
+        if not ret:
+            break
+
+        # 射影変換
+        # M = cv2.getPerspectiveTransform(p_original, p_trans)
+        M = cv2.getPerspectiveTransform(rect, dst)
+        frame_trans = cv2.warpPerspective(frame, M, (width, height))
+        
+
+
+        # 表示
+        cv2.imshow('変換後の映像', frame_trans)
+        cv2.setMouseCallback('image',onMouse) 
+
+        # cv2.imshow('変換前の映像', frame)
+
+        if cv2.waitKey(1) & 0xFF == ord('q'):
+            break
+
+
+# while True:
+#     # カメラからのフレーム取得
+#     ret, frame = capture.read()
+#     if not ret:
+#         break
+
+#     # 射影変換
+#     # M = cv2.getPerspectiveTransform(p_original, p_trans)
+#     M = cv2.getPerspectiveTransform(rect, dst)
+#     frame_trans = cv2.warpPerspective(frame, M, (width, height))
+
+
+#     # 表示
+#     cv2.imshow('変換後の映像', frame_trans)
+#     # cv2.imshow('変換前の映像', frame)
+
+#     if cv2.waitKey(1) & 0xFF == ord('q'):
+#         break
 
 capture.release()
 cv2.destroyAllWindows()
