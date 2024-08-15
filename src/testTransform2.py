@@ -1,4 +1,6 @@
 #画像をQで閉じる
+
+#https://qiita.com/ryo_ryo/items/973007667c528ef23abb
 import numpy as np
 import cv2
 
