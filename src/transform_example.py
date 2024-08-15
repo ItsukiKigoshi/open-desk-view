@@ -5,6 +5,8 @@
 
 #[(275, 329), (785,321), (914,584), (141,592)]
 
+# python src/transform_example.py --image public/sample-desktop-1.jpg --coords "[(275, 329), (785,321), (914,584), (141,592)]"
+
 from transform import four_point_transform
 import numpy as np
 import argparse
