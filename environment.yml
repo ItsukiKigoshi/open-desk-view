@@ -1,0 +1,9 @@
+name: open-desk-view
+channels:
+  - conda-forge
+dependencies:
+  - python
+  - pip
+  - pip:
+    - opencv-python
+    - matplotlib
